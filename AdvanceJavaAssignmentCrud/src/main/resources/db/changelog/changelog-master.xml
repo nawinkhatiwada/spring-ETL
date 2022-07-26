@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet id="create-table-user-202207012" author="nawin">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="true" primaryKey="true" primaryKeyName="pk_users"/>
+            </column>
+            <column name="full_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-order-202207012" author="nawin">
+        <createTable tableName="orders">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="true" primaryKey="true" primaryKeyName="pk_orders"/>
+            </column>
+            <column name="invoice_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="gross_amount" type="double">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="transaction_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-user_order-202207012" author="nawin">
+        <createTable tableName="user_order">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="true" primaryKey="true" primaryKeyName="pk_user_order"/>
+            </column>
+            <column name="user_id" type="BIGINT"/>
+            <column name="order_id" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="user_id" baseTableName="user_order"
+                                 constraintName="FK_USER_ORDER_ON_USER" referencedColumnNames="id"
+                                 referencedTableName="users"/>
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="user_order"
+                                 constraintName="FK_USER_ORDER_ON_ORDER" referencedColumnNames="id"
+                                 referencedTableName="orders"/>
+    </changeSet>
+
+    <changeSet id="create-table-skus-202207012" author="nawin">
+        <createTable tableName="skus">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="true" primaryKey="true" primaryKeyName="pk_skus"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="rlp" type="double">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="rlp_vat" type="double">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="active" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-table-order_sku-202207012" author="nawin">
+        <createTable tableName="order_sku">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="true" primaryKey="true" primaryKeyName="pk_order_sku"/>
+            </column>
+            <column name="order_id" type="BIGINT"/>
+            <column name="sku_id" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="sku_id" baseTableName="order_sku" constraintName="FK_ORDER_SKU_ON_SKU"
+                                 referencedColumnNames="id" referencedTableName="skus"/>
+        <addForeignKeyConstraint baseColumnNames="order_id" baseTableName="order_sku"
+                                 constraintName="FK_ORDER_SKU_ON_ORDER" referencedColumnNames="id"
+                                 referencedTableName="orders"/>
+    </changeSet>
+
+    <changeSet id="Update-user-add-email-column-202207014" author="nawin">
+        <addColumn tableName="users">
+            <column name="email" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="load-order-data-2022070014" author="nawin">
+        <loadData tableName="orders" separator=";" file="db/changelog/book1.csv">
+            <column name="gross_amount" type="numeric"/>
+        </loadData>
+    </changeSet>
+
+    <changeSet id="load-user-order-date-2022070014" author="nawin">
+        <loadData tableName="user_order" file="db/changelog/user_order.csv">
+        </loadData>
+    </changeSet>
+
+    <changeSet id="load-order-sku-data-2022070014" author="nawin">
+        <loadData tableName="order_sku" file="db/changelog/order_sku.csv">
+        </loadData>
+    </changeSet>
+
+</databaseChangeLog>

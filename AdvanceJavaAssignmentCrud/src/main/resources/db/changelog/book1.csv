@@ -1,0 +1,3 @@
+﻿invoice_id;quantity;gross_amount;transaction_date;status
+1890998;2;1200D;2022-12-01;TRUE
+1890991;2;1200.89898;2022-12-02;TRUE
